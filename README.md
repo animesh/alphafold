@@ -1,3 +1,46 @@
+# Predicting [N-terminal UNG](https://www.uniprot.org/blast/?about=P13051[1-100]&key=Chain&id=PRO_0000176173) Protein structure prediction with [API@Södinglab](https://twitter.com/thesteinegger/status/1416826734322749445)
+```bash
+conda create -n af2
+conda activate af2
+mamba  uninstall -c rapidsai -c nvidia -c conda-forge -c defaults  cudatoolkit==10
+mamba install -y -q -c conda-forge openmm=7.5.1 python=3.7 pdbfixer
+sudo apt-get -qq -y update 2>&1 1>/dev/null
+sudo apt-get -qq -y install jq curl zlib1g gawk 2>&1 1>/dev/null
+sudo apt install python3-pip
+git clone https://github.com/animesh/alphafold
+cd alphafold/
+whereis python
+find /home/animeshs/miniconda3/envs/af2 -iname "site-packages"
+cd /home/animeshs/miniconda3/envs/af2/lib/python3.7/site-packages/
+patch -s -p0 < /mnt/z/alphafold/docker/openmm.patch
+cd /mnt/z/alphafold/
+curl -s -F q=nung100.fasta -F mode=all https://a3m.mmseqs.com/ticket/msa | jq -r '.id'
+touch AF2_READY
+wget -qnc https://storage.googleapis.com/alphafold/alphafold_params_2021-07-14.tar
+mkdir params
+tar -xf alphafold_params_2021-07-14.tar -C params/
+mv stereo_chemical_props.txt alphafold/common/
+pip install py3Dmol
+pip install tensorflow
+pip install matplotlib
+pip install Bio
+pip install dm-tree
+pip install dm-haiku
+pip install jax
+pip install --upgrade "jax[cpu]"
+pip install ml-collections
+pip install google-colab
+pip install ipywidgets
+python alphafold2predictstructure_ipynb_की_कॉपी.py
+```
+
+## via colab notebook
+```bashjupyter nbextension enable --py widgetsnbextension
+pip install jupyter_http_over_ws
+jupyter serverextension enable --py jupyter_http_over_ws
+jupyter notebook   --NotebookApp.allow_origin='https://colab.research.google.com'   --port=8888   --NotebookApp.port_retries=0
+``` 
+
 ![header](imgs/header.jpg)
 
 # AlphaFold
